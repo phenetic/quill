@@ -125,8 +125,8 @@ trait SqlIdiom extends Idiom {
       }
     def withGroupBy =
       groupBy match {
-        case None          => withWhere
-        case Some(groupBy) => stmt"$withWhere GROUP BY ${tokenizeGroupBy(groupBy)}"
+        case None | Some(Constant(0)) => withWhere
+        case Some(groupBy)            => stmt"$withWhere GROUP BY ${tokenizeGroupBy(groupBy)}"
       }
     def withOrderBy =
       orderBy match {

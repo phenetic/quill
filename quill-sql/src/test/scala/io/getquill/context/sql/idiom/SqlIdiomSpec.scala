@@ -262,6 +262,15 @@ class SqlIdiomSpec extends Spec {
           testContext.run(q).string mustEqual
             "SELECT t.i, COUNT(*) FROM TestEntity t GROUP BY t.i"
         }
+        "multiple" in {
+          val q = quote {
+            qr1.groupBy(_ => 0).map {
+              case (_, entities) => (entities.size, entities.map(_.l).max)
+            }
+          }
+          testContext.run(q).string mustEqual
+            "SELECT COUNT(*), MAX(x5.l) FROM TestEntity x5"
+        }
         "nested" in {
           val q = quote {
             for {
